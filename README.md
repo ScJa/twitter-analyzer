@@ -1,4 +1,6 @@
-#Jakob Schneider, Stefan Belk, Klaus Falb, Amra Kausevic, Filip Rydzi
+#Twitter Analyzer
+
+##Authors: Belk Stefan, Falb Klaus, Kausevic Amra, Rydzi Filip, Schneider Jakob
 
 Relational Database: PostgreSQL
 
