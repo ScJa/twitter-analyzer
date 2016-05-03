@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <script type="text/javascript" src="/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="/jquery.tablesorter.min.js"></script>
+
+    <meta charset="UTF-8">
+    <title>Twitter Crawler</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">-->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="/web.css" />
+
+
+</head>
+<script type="text/javascript">
+    $.ajaxSetup ({  cache: false  });
+</script>
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">G1T4</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+          <li><a href="" onclick="killIntervals();$('#content').load('/queries.html');return false;">Queries</a></li>
+          <li><a href="" onclick="killIntervals();$('#content').load('/crawler.html');return false;">Crawler</a></li>
+          <li><a href="" onclick="killIntervals();$('#content').load('/analyzer.html');return false;">Analyzer</a></li>
+          <li><a href="" onclick="killIntervals();$('#content').load('/topics.html');return false;">New Topic</a></li>
+          <li><a href="" onclick="killIntervals();$('#content').load('/mongodb');return false;">MongoDB</a></li>
+          <li><a href="" onclick="killIntervals();$('#content').load('/neo4j');return false;">Neo4J</a></li>
+          <li><a href="" onclick="killIntervals();$('#content').load('/log.html');return false;">Log</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+          <li><a href="" onclick="killIntervals();$('#content').load('/logout');return false;">Logout</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div id="content" class="container" style="width:95%">
+    <script type="text/javascript">$('#content').load('/frontpage.html');</script>
+</div>
+<script type="text/javascript">
+    var INTERVALS = [];
+
+    function killIntervals() {
+        var arrayLength = INTERVALS.length;
+        for (var i = 0; i < arrayLength; i++) {
+            var id = INTERVALS.pop();
+            clearInterval(id);
+        }
+    }
+</script>
+</body>
+</html>

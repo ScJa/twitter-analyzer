@@ -1,0 +1,42 @@
+<div style="width:100%">
+    <div class="container" style="width:50%; float: left;">
+        <h1>Project Topic 4 – Analysing Big Data</h1>
+        <h4>An application for analysing relationships in a social network.</h4>
+        <hr>
+        <ul style="font-size: 120%;">
+            <li>Rydzi Filip (1226452)</li>
+            <li>Causevic Amra (0649241)</li>
+            <li>Belk Stefan Andreas (0750926)</li>
+            <li>Falb Klaus (0754097)</li>
+            <li>Schneider Jakob Felix (1528502)</li>
+        </ul>
+        <hr>
+        <ul style="font-size: 120%;">
+            <li>PostgreSQL <span id="pg_users"></span></li>
+            <li>MongoDB <span id="mongo_docs"></span></li>
+            <li>Neo4J <span id="neo4j_users"></span></li>
+        </ul>
+    </div>
+    <div class="container hidden-xs" style="width:50%;">
+        <div class="container">
+            <a href="/system_diagram.png" target="_blank">
+                <img src="/system_diagram.png" style="width:50%;"/>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $.getJSON('/databases/postgres', function(data) {
+        $('#pg_users').html(' - '+data['count']+' Users');
+    });
+    $.getJSON('/databases/mongo', function(data) {
+        $('#mongo_docs').html(' - '+data['count']['tweets']+' Tweets');
+    });
+    $.getJSON('/databases/neo4j', function(data) {
+        $('#neo4j_users').html(' - '+data['count']+' Users');
+    });
+</script>
+
+
+

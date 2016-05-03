@@ -1,0 +1,23 @@
+    Topic: Books
+Keywords: bestseller, Harry Potter, 50 shades of grey, library, reading, a man called ove, the wright brothers, the sheperd's crown, david lagercrantz, the girl in the spiders web, henry marsh, fredrik backman, david mccollough, terry pratchett, pterry, tom clacy, the girl on the train, paula hawkins
+
+Topic: Computer
+Keywords: Apple, Microsoft, IBM, Lenovo, Intel, Java, Python, C++, C#, Nvidea, Iwatch, Iphone, samsung, huawai, smart home, smarthome, 
+
+Topic: Fitness
+Keywords: "Jillian Michaels", HIIT, training, running, crossfit, protein shake, fitness center, FIT INN, body building, muscle training
+
+Topic: Food
+Keywords: low carb, high fat, vegan, vegetarian, meat, food tracking, cocking, paleo, food combining, weight watchers, smoothies
+
+Topic: Movies
+Keywords: Star Wars, Interstellar, Star Trek, James Bond, Martian, Hunger games, Minions, cinema, jurassic, fast and furious, mission impossible, 
+
+Topic: Beauty
+Keywords: lipgloss, maskara, make-up, makeup, mabelline, bilou, chanel, l'oreal, loreal, nivea, lancome, bobbi brown, clinique, paco rabanne, clarins, beauty tips, beauty editorial, 
+
+Topic: Fashion
+Keywords: hugo boss, louis vuitton, vuitton, gabbana, guicci, prada, chimy choo, armani, fashion trend, fashion show, topmodel, victoria secret,  
+
+
+

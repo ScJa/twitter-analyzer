@@ -1,0 +1,40 @@
+The analyzer reads tweets from the MongoDB, analyzes them (in conjunction with
+the user information in the SQL database) and stores the results into the
+Neo4J Graph database.
+
+It consists of one master process and multiple (by default 6) slave processes.
+The master process reads tweets that are still unprocessed (marked by the
+'analyzer.processed' field) and puts them in a queue. The slave processes take
+tweets out of the queue, analyze them and store results into the graph database.
+After a tweet has been analyzed, the field 'analyzer.processed' is set to true
+on the tweet in the MongoDB.
+
+Following aspects of a tweet are analyzed:
+  * Does the tweet mention a certain topic (keyword search)?
+  * Is the tweet in reply to a tweet of another user?
+  * Is the tweet retweeted/favorited by other users?
+
+Nodes and relations in the graph database are created "on demand".
+
+
+Structure of the graph database created by the analyzer:
+
+  node "user":
+    name, id, followers_count, friends_count, statuses_count, favourites_count
+        ==> general information from the twitter api
+
+    tweets_retweet_count:  number of tweets from this user retweeted by other users
+    tweets_favorite_count: number of tweets from this user favorited by other users
+        ==> analyzed from the tweets
+
+
+  node "topic_name":
+    name: Name of the topic
+
+
+  relations:
+    user --'mentions'(count)--> topic_name
+      Counts how often a user mentions a given topic
+
+    user --'replies_to'(count)--> user
+      Counts how often a user replies to a tweet by another user

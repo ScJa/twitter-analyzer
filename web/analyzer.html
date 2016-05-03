@@ -1,0 +1,59 @@
+<h1>Twitter Data Analyzer</h1>
+Refesh Interval:
+<select id="interval" onchange="setIntervals()" class="form-control">
+    <option value="0.5">Fast</option>
+    <option value="1" selected>Normal</option>
+    <option value="2">Slow</option>
+    <option value="3">Very Slow</option>
+</select>
+<hr/>
+<h2>Options</h2>
+<button class="btn" onclick="toggleAnalyzer()" id="toggleAnalyzer">Start Analyzer</button>
+<hr/>
+<h2>Status</h2>
+<pre id="status"></pre>
+<hr/>
+<h2>Log</h2>
+<pre id="log"></pre>
+
+<script type="text/javascript">
+
+function getStatus() {
+    $.getJSON("/analyzer/status", function( data ) {
+        $("#status").html(JSON.stringify(data, null, 4));
+        if (data["running"]) {
+            $("#toggleAnalyzer").html("Stop Analyzer");
+        } else {
+            $("#toggleAnalyzer").html("Start Analyzer");
+        }
+    });
+}
+
+function toggleAnalyzer() {
+    $.get("/analyzer/toggle", function( data ) {
+        getStatus();
+    });
+}
+
+function getLog() {
+    $.get("/log", function( data ) {
+        $("#log").html(data);
+    });
+}
+
+getStatus();
+getLog();
+
+var crawlerInterval = setInterval(getStatus, 1000);
+var logInterval = setInterval(getLog, 2000);
+INTERVALS.push(crawlerInterval);
+INTERVALS.push(logInterval);
+
+function setIntervals() {
+    clearInterval(crawlerInterval);
+    clearInterval(logInterval);
+    var multi = parseFloat($("#interval option:selected").val());
+    crawlerInterval = setInterval(getStatus, 1000*multi);
+    logInterval = setInterval(getLog, 2000*multi);
+}
+</script>

@@ -1,0 +1,52 @@
+pre {
+    white-space: pre-wrap;
+    height: 100%;
+    width: 100%;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.pre-wrap {
+    white-space: pre-wrap;
+}
+
+.pre-line {
+    white-space: pre-line;
+}
+
+li {
+    margin-top: 10px;
+}
+
+
+#content{
+  width: 95%;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+.tablesorter > thead > tr > th, .tablesorter > tr > th {
+    cursor: pointer;
+}
+
+.input-group{
+    width: 100%;
+}
+
+.input-group-addon {
+    width: 25%;
+}
+
+.navbar {
+    border-radius:0px;
+}
+
+.navbar-brand {
+    font-size:20px;
+    line-height:inherit;
+    color: #009fe3 !important;
+}

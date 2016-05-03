@@ -1,0 +1,9 @@
+# Python requirements
+# Install by running 'pip3 -r requirements.txt'
+sqlalchemy
+twitter
+pymongo
+psycopg2
+flask
+nltk
+py2neo

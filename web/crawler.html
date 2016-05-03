@@ -1,0 +1,96 @@
+<h1>Twitter Crawler</h1>
+Refesh Interval:
+<select class="form-control" id="interval" onchange="setIntervals()">
+    <option value="0.5">Fast</option>
+    <option value="1" selected>Normal</option>
+    <option value="2">Slow</option>
+    <option value="3">Very Slow</option>
+</select>
+
+<hr/>
+
+<table style="width:100%">
+    <tr> <td width="10%"></td> <td width="45%"><h2>Stream Crawler</h2></td> <td width="45%"><h2>API Crawler</h2></td> </tr>
+    <tr>
+        <td></td>
+        <td><button class="btn" onclick="toggleCrawler('stream')" id="toggle_stream">Start Crawler</button></td>
+        <td><button class="btn" onclick="toggleCrawler('api')" id="toggle_api">Start Crawler</button></td>
+    </tr>
+    <tr> <td>Running</td> <td><span id="running_stream"></span></td> <td><span id="running_api"></span></td> </tr>
+    <tr> <td>Heartbeat</td> <td><span id="time_stream"></span></td> <td><span id="time_api"></span></td> </tr>
+    <tr> <td>Successful</td> <td><span id="successful_stream"></span></td> <td><span id="successful_api"></span></td> </tr>
+    <tr> <td>Failed</td> <td><span id="failed_stream"></span></td> <td><span id="failed_api"></span></td> </tr>
+    <tr> <td>Rejected (Language)</td> <td><span id="rejected_stream"></span></td> <td><span id="rejected_api"></span></td> </tr>
+    <tr> <td>Last Tweet</td> <td><pre id="tweet_stream" class="pre-wrap"></pre></td> <td><pre id="tweet_api" class="pre-wrap"></pre></td> </tr>
+</table>
+
+<hr/>
+<h2>Log</h2>
+<pre id="log"></pre>
+
+
+
+<script type="text/javascript">
+
+function getCrawlerStatus(crawler) {
+    $.getJSON("/crawler/status/"+crawler, function( data ) {
+        $("#running_"+crawler).html(""+data["running"]);
+        if (data["running"]) {
+            $("#toggle_"+crawler).html("Stop Crawler");
+        } else {
+            $("#toggle_"+crawler).html("Start Crawler");
+        }
+        $("#time_"+crawler).html(data["time"]);
+        $("#successful_"+crawler).html(data["successful"]);
+        $("#failed_"+crawler).html(data["failed"]);
+        $("#rejected_"+crawler).html(data["rejected_lang"]);
+    });
+}
+
+function toggleCrawler(crawler) {
+    $.getJSON("/crawler/toggle/"+crawler, function( data ) {
+        getCrawlerStatus(crawler);
+    });
+}
+
+function getLastTweet(crawler) {
+    $.getJSON("/crawler/last_tweet/"+crawler, function( data ) {
+        $("#tweet_"+crawler).html(JSON.stringify(data, null, 4));
+    });
+}
+
+function getLog() {
+    $.get("/log", function( data ) {
+        $("#log").html(data);
+    });
+}
+
+function getCrawlerStatusAll() {
+    getCrawlerStatus("stream");
+    getCrawlerStatus("api");
+}
+
+function getLastTweetAll() {
+    getLastTweet("stream");
+    getLastTweet("api");
+}
+
+function getAll() {
+    getCrawlerStatusAll();
+    getLastTweetAll();
+    getLog();
+}
+
+var crawlerInterval = setInterval(getAll, 1000);
+var logInterval = setInterval(getLog, 2000);
+INTERVALS.push(crawlerInterval);
+INTERVALS.push(logInterval);
+
+function setIntervals() {
+    clearInterval(crawlerInterval);
+    clearInterval(logInterval);
+    var multi = parseFloat($("#interval option:selected").val());
+    crawlerInterval = setInterval(getCrawlerStatusAll, 1000*multi);
+    logInterval = setInterval(getLog, 2000*multi);
+}
+</script>

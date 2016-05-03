@@ -1,0 +1,217 @@
+<h1>Queries</h1>
+Query:
+<select id="query" onchange="show_form();" class="form-control">
+    <option value="most_influential_persons" selected>Most Influential Persons</option>
+    <option value="user_interests">User Interests</option>
+    <option value="suggests_based_existing">Suggest Ads Based on Existing Interests</option>
+    <option value="suggests_based_potential">Suggest Ads Based on Potential Interests</option>
+    <!--<option value="list_users">List Users</option>-->
+</select>
+<hr/>
+
+
+<div id="most_influential_persons" class="hideMe">
+    <div class="input-group">
+        <span class="input-group-addon">
+            Min Favorites Count
+        </span>
+        <input type="number" class="form-control" value="10" placeholder="10" id="min_fav" min="10" aria-describedby="sizing-addon1">
+    </div>
+
+    <div class="input-group">
+        <span class="input-group-addon">
+            Min Retweet Count
+        </span>
+        <input type="number" class="form-control" value="10" placeholder="10" id="min_ret" min="10" aria-describedby="sizing-addon1">
+    </div>
+
+    <div class="input-group">
+        <span class="input-group-addon">
+            Min Followers Count
+        </span>
+        <input type="number" class="form-control" value="10" placeholder="10" id="min_fol" min="10" aria-describedby="sizing-addon1">
+    </div>
+
+    <div class="input-group">
+        <span class="input-group-addon">
+            Limit
+        </span>
+        <input type="number" class="form-control" value="10" placeholder="10" id="limit" min="1" aria-describedby="sizing-addon1">
+    </div>
+    <p>
+        <button class="btn btn-success" onclick="do_most_influential_persons();">Run</button>
+        <script>
+            function do_most_influential_persons() {
+                $("#query_content").html('<a href="/loading.gif"></a>');
+                var url = "/most_influential_persons?min_fav="+$("#min_fav").val()+"&min_ret="+$("#min_ret").val()+"&min_fol="+$("#min_fol").val()+"&limit="+$("#limit").val();
+                load_into_content(url);
+            }
+        </script>
+    </p>
+</div>
+
+
+<div id="user_interests" class="hideMe">
+    <div class="input-group">
+        <span class="input-group-addon">Interest</span>
+        <select id="interest"  class="form-control" >
+           <option value="broad" selected>Broad</option>
+           <option value="focused">Focused</option>
+        </select>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">Limit</span>
+        <input type="number" class="form-control" value="10" placeholder="10" id="user_interests_limit" min="1" aria-describedby="sizing-addon1">
+    </div>
+    <p>
+        <button class="btn btn-success" onclick="do_user_interests();">Run</button>
+        <script>
+            function do_user_interests() {
+                var url = "/user_interests?interest="+$("#interest :selected").val()+"&limit="+$("#user_interests_limit").val();
+                load_into_content(url);
+            }
+        </script>
+    </p>
+</div>
+
+
+
+<div id="suggests_based_existing" class="hideMe">
+    <div class="input-group">
+        <span class="input-group-addon">User Name</span>
+        <div>
+            <input type="text" onkeyup="do_quick_search();" class="form-control" placeholder="" id="user_name" aria-describedby="sizing-addon1">
+            <div id="quicksearch" style="width:75%; display:inline;"></div>
+        </div>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">Limit</span>
+        <input type="number" class="form-control" value="10" placeholder="10" id="suggests_based_existing_limit" min="1" aria-describedby="sizing-addon1">
+    </div>
+    <p>
+        <button class="btn btn-success" onclick="do_suggests_based_existing();">Run</button>
+        <script>
+            function do_suggests_based_existing() {
+                var name = $("#user_name").val();
+                var limit = $('#suggests_based_existing_limit').val();
+                var url = "/suggests_based_existing?user_name="+name+"&limit="+limit;
+                load_into_content(url);
+            }
+
+            function do_quick_search() {
+                $('#quicksearch').html('').hide();
+                var name = $("#user_name").val();
+                if (name.length > 1) {
+                    var url = "/quick_search?name="+name
+                    $.get(url, function(data) {
+                        $('#quicksearch').html(data).show();
+                        $('#quicksearch table tbody tr td').css('cursor', 'pointer');
+                        $('#quicksearch table tbody tr td').click(quick_search_to_input);
+                    });
+                }
+            }
+
+            function quick_search_to_input() {
+                $("#user_name").val($(this).html());
+                $('#quicksearch').html('').hide();
+            }
+        </script>
+    </p>
+
+</div>
+
+
+<div id="suggests_based_potential" class="hideMe">
+    <div class="input-group">
+        <span class="input-group-addon">User Name</span>
+        <div>
+            <input type="text" onkeyup="do_quick_search2();" class="form-control" placeholder="" id="user_name2" aria-describedby="sizing-addon1">
+            <div id="quicksearch2" style="width:75%; display:inline;"></div>
+        </div>
+    </div>
+    <!--<div class="input-group">-->
+        <!--<span class="input-group-addon">Relation Type</span>-->
+        <!--<select id="relation"  class="form-control" >-->
+           <!--<option value="replies_to" selected>replies_to</option>-->
+        <!--</select>-->
+    <!--</div>-->
+    <input type="hidden" value="replies_to" name="relation" id="relation">
+    <div class="input-group">
+        <span class="input-group-addon">Limit</span>
+        <input type="number" class="form-control" value="10" placeholder="10" id="suggests_based_potential_limit" min="1" aria-describedby="sizing-addon1">
+    </div>
+    <p>
+        <button class="btn btn-success" onclick="do_suggests_based_potential();">Run</button>
+        <script>
+            function do_suggests_based_potential() {
+                var name = $("#user_name2").val();
+                var limit = $('#suggests_based_potential_limit').val();
+                var relation = $("#relation").val();
+                var url = "/suggests_based_potential?user_name="+name+"&relation="+relation+"&limit="+limit;
+                load_into_content(url);
+            }
+
+            function do_quick_search2() {
+                $('#quicksearch2').html('').hide();
+                var name = $("#user_name2").val();
+                if (name.length > 1) {
+                    var url = "/quick_search?name="+name
+                    $.get(url, function(data) {
+                        $('#quicksearch2').html(data).show();
+                        $('#quicksearch2 table tbody tr td').css('cursor', 'pointer');
+                        $('#quicksearch2 table tbody tr td').click(quick_search_to_input2);
+                    });
+                }
+            }
+
+            function quick_search_to_input2() {
+                $("#user_name2").val($(this).html());
+                $('#quicksearch2').html('').hide();
+            }
+        </script>
+    </p>
+</div>
+
+<div id="list_users" class="hideMe">
+    <div class="input-group">
+        <span class="input-group-addon">Limit</span>
+        <input type="number" class="form-control" value="10" placeholder="10" id="list_users_limit" min="1" aria-describedby="sizing-addon1">
+    </div>
+    <p>
+        <button class="btn btn-success" onclick="do_list_users();">Run</button>
+        <script>
+            function do_list_users() {
+                var url = "/list_users?limit="+$("#list_users_limit").val();
+                load_into_content(url);
+            }
+        </script>
+    </p>
+</div>
+<hr/>
+<div id="query_content" class=""></div>
+<div id="loading_gif" class="hideMe" style="padding-left:25%; padding-right:25%;">
+    <img src="/loading.gif" width="100%"/>
+</div>
+
+
+<script type="text/javascript">
+$(".hideMe").hide();
+$("#most_influential_persons").show();
+
+
+function load_into_content(url) {
+    $("#query_content").html('');
+    $("#loading_gif").show();
+    $.get(url, function(data) {
+        $("#loading_gif").hide();
+        $("#query_content").html(data);
+    });
+}
+
+function show_form(){
+    var name = $("#query :selected").val();
+    $(".hideMe").hide();
+    $("#"+name).show();
+    $("#query_content").html('');
+}
+</script>

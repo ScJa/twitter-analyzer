@@ -1,0 +1,109 @@
+neo4j database location /var/lib/neo4j/data
+
+Example Queries:
+MATCH (u:user)-[m:mentions]->(t:topic_name) WHERE m.count>20 RETURN u,m,t;
+MATCH (u:user)-[m:mentions]->(t:topic_name) RETURN SUM(m.count), t.name;
+MATCH (u:user)-[m:replies_to]->(u2:user) WHERE m.count>3 RETURN u, u2;
+
+MATCH (u:user)-[m:mentions]->(t:topic_name) WHERE m.count>3 RETURN COUNT(u), t.name;
+MATCH (u:user)-[m:mentions]->(t:topic_name) WHERE m.count>3 RETURN SUM(m.count), t.name;
+
+
+Task 2
+
+match(u:user)-[r:mentions]->(t:topic_name) where u.name='LamatthewsTony' return distinct t.name,(u.statuses_count/r.count)
+
+Return how often a topic is mentioned -> value of 1 means its mentioned in every tweet. Value of 10 -> in every tenth tweet. 
+Replace LamatthewsTony with parameter ofc
+
+match(u:user)-[r:mentions]->(t:topic_name) return t,count(r)
+
+Fitness 4264 ---- 15,776266416510318949343339587242
+Books 3578 ---- 18,801006148686416992733370598099
+Beauty 3311 ---- 20,317124735729386892177589852008
+Fashion 1099 ---- 61,210191082802547770700636942675
+Car 67270 ---- 1
+Food 1606 ---- 41,886674968866749688667496886675
+Movies 3034 ---- 22,172050098879367172050098879367
+Computer 7915 ---- 8,4990524320909665192672141503474
+
+## Die Gewichtung oben stimmt meiner Meinung nach nicht, weil es nur die Anzahl der Bezienhungen zwischen "Topics" und "Users" berechnet werden(count r), und
+## es wird ignoriert wie viel mal ein User einen Topic erwaehnt hat. Die korrekte Gewichtung sollte man deswegen mit Query:
+## "match(u:user)-[r:mentions]->(t:topic_name) return t,sum(r.count)" berechnen.
+## -> Dann stimmt auch die obige Aussage: "Return how often a topic is mentioned ..."
+
+
+Multiply the (u.statuses_count/r.count) with these numbers to get weighted results
+
+ALTERNATIVE: match(u:user)-[r:mentions]->(t:topic_name) return t,sum(r.count)
+Gives very similar results
+
+match(u:user)-[r:mentions]->(t:topic_name) return distinct t.name,avg(u.statuses_count)
+
+Bin mir nicht ganz sicher wie man diese benutzen könnte. Die Werte sehen ziemlich strange aus... was gibt das zurück?
+
+## "FOCUSED" PART
+## match(u:user)-[r:mentions]->(t:topic_name) return u.name, u.statuses_count, sum(r.count), t.name  order by (sum(r.count)/u.statuses_count) desc  limit 15;
+## Ich habe die Gewichtung "sum(r.count)/u.statuses_count" benutzt.
+## Ich wuerde sagen, dass es hier mehr Sinn macht nach der Anzahl der Tweets zu gewichten und nicht nach Topics.
+## Wenn wir nach den Topics gewichten wuerden, dann bekommen wir das eigentlich jeder User fuer jeden Topic "focused" ist.
+
+## "BROAD" PART
+## Hier macht es schon Sinn, nach dem Topics zu gewichten.
+## TODO
+## Ich brauche hier noch ein bischen Hilfe...
+
+
+Task 1
+
+match(u:user) return u.name, u.followers_count, u.tweets_retweet_count order by u.followers_count desc limit 10
+
+retweet count is noch empty zurzeit und favourite count fehlt. ist noch wichtig sich eine gute gewichtung zu überlegen..
+thoughts: 
+-viele followers und gleichzeitig wenig favourits und retweets -> nicht influential
+-wenige followers -> immer nicht influential
+-viele followers und entweder viele favouris oder retweets -> trotzdem influential
+-gewichtung würd ich retweets ein bisschen härter zählen als favs.
+
+Task 3
+
+match(u:user)-[r:mentions]->(t:topic_name) where u.name='LamatthewsTony' return distinct t, r.count order by r.count desc;
+
+## Meiner Meinung nach braucht man fuer diese Task die Gewichtung nicht, weil es den User nicht interessiert, wie oft ein Topic von den anderen Benutzer erwaehnt wurde.
+## Es interessiert ihn nur wie oft er den Topic erwaehnt hat.
+## Betrachte folgende Scenario: Wir haben 5 Users(U1, ..., U5) und 2 Topics (T1, T2).
+## Jeder User "mentions" den Topic T1: 10 Mal.
+## und dazu noch U5 - mentions -> T2: 3 Mal
+## d.h. laut der Gewichtung (des Topics) sollte der User U5 die Werbung ueber T2 bekomment, was kein Sinn macht...
+
+Multiply with these values:
+
+Fitness 4264 ---- 15,776266416510318949343339587242
+Books 3578 ---- 18,801006148686416992733370598099
+Beauty 3311 ---- 20,317124735729386892177589852008
+Fashion 1099 ---- 61,210191082802547770700636942675
+Car 67270 ---- 1
+Food 1606 ---- 41,886674968866749688667496886675
+Movies 3034 ---- 22,172050098879367172050098879367
+Computer 7915 ---- 8,4990524320909665192672141503474
+
+->Suggest highest value. Bzw. würde auch Sinn machen mehrere zu Suggestion und die Interessegewichtung hinzuschreiben, denk ich.. gibt mehr infos
+
+Task 4
+
+match(u1:user)-[r1:replies_to]->(u2:user)-[r2:replies_to]->(u3:user)-[m3:mentions]->(t3:topic_name),(u2:user)-[m2:mentions]->(t2:topic_name),(u1:user)-[m1:mentions]->(t1:topic_name)
+where (m3.count>0 or m2.count>0 or m1.count>0)  and u1<>u2 and u2<>u3 and u1<>u3 
+return distinct u1,t1,m1.count,t2,(m3.count*1.0)/10,t3,(m3.count*1.0)/100 limit 5
+
+Könnte man noch erweitern, allerdings denke ich dass das wenig Sinn hat, denke sogar der dritte User hat eher wenig Sinn,
+hab ihn deshalb gleich mal nur mit einem zehntel gewichted. Würde auch den u2 zehnmal weniger gewichten als die direkten Interessen oder so
+
+Zurzeit gibt das immer nur ein topic zurück... bin mir nicht sicher ob das zufall ist oder nicht.
+
+match(u1:user)-[r1:replies_to]->(u2:user),(u2:user)-[m2:mentions]->(t2:topic_name)
+where (m2.count>0) and u1<>u2 and u1.name = "AyeMeng"
+return distinct t2.name,sum(m2.count)
+order by sum(m2.count) desc
+limit 10
+
+newv.
