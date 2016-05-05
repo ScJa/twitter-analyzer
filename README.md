@@ -1,6 +1,6 @@
 #Twitter Analyzer
 
-##Authors: Belk Stefan, Causevic Amra, Falb Klaus, Rydzi Filip, Schneider Jakob
+####Co-Authors: Belk Stefan, Causevic Amra, Falb Klaus, Rydzi Filip
 
 Relational Database: PostgreSQL
 
